@@ -139,6 +139,10 @@ const productList = document.querySelector('.product-list');
 const productListItems = document.querySelectorAll('.product-list__link');
 const productSubLists = document.querySelectorAll('.product-sublist');
 const productSubListItems = document.querySelectorAll('.product-sublist__link');
+const paginationBtns = document.querySelectorAll('.pagination__btn');
+const paginationBtnLeft = document.querySelector('.pagination__btn--left');
+const paginationBtnRight = document.querySelector('.pagination__btn--right');
+const paginationLinks = document.querySelectorAll('.pagination__link');
 const certificateBlocks = document.querySelectorAll('.certificate__block img');
 
 const overlay = document.createElement('div');
@@ -150,13 +154,13 @@ if (productList) {
         item.addEventListener('click', event => {
             event.preventDefault();
 
-            renderCategory(productListItems, item);
+            renderActiveElement(productListItems, item);
 
             const list = item.parentNode.querySelector('.product-sublist');
 
             if (item.parentNode.contains(list)) {
                 productSubLists.forEach(item => {
-                    renderCategory(productSubLists, list);
+                    renderActiveElement(productSubLists, list);
                 })
             } else {
                 closeOverlay();
@@ -165,8 +169,8 @@ if (productList) {
                 checkMenuMobileAside();
                 asideMenu.classList.remove('show');
 
-                renderCategory(productSubListItems);
-                renderCategory(productSubLists);
+                renderActiveElement(productSubListItems);
+                renderActiveElement(productSubLists);
             }
         });
     });
@@ -175,7 +179,7 @@ if (productList) {
         item.addEventListener('click', event => {
             event.preventDefault();
 
-            renderCategory(productSubListItems, item);
+            renderActiveElement(productSubListItems, item);
             closeOverlay();
             checkWidthBody();
             menuMobileAside.classList.remove('active');
@@ -223,6 +227,51 @@ if (modalWindow) {
             closeFormWindow();
             checkWidthBody();
         }
+    });
+}
+
+if (paginationLinks) {
+    paginationLinks.forEach(function (link, i) {
+
+        if (link.classList.contains('active')) {
+            checkNumberPages(link);
+        }
+
+        link.addEventListener('click', event => {
+            event.preventDefault();
+            renderActiveElement(paginationLinks, link);
+            checkNumberPages(link);
+            checkPaginationBtn(i);
+        });
+    });
+
+    paginationBtns.forEach(btn => {
+        btn.addEventListener('click', event => {
+            event.preventDefault();
+
+            for (let i = 0; i < paginationLinks.length; i++) {
+                const element = paginationLinks[i];
+                if (element.classList.contains('active')) {
+                    let currentLink = i;
+
+                    if (btn === paginationBtnRight) {
+                        let nextItem = currentLink + 1;
+                        renderActiveElement(paginationLinks, paginationLinks[nextItem]);
+                        checkPaginationBtn(nextItem);
+                        checkNumberPages(paginationLinks[nextItem]);
+                    }
+
+                    if (btn === paginationBtnLeft) {
+                        let prevItem = currentLink - 1;
+                        renderActiveElement(paginationLinks, paginationLinks[prevItem]);
+                        checkPaginationBtn(prevItem);
+                        checkNumberPages(paginationLinks[prevItem]);
+                    }
+
+                    break;
+                }
+            }
+        });
     });
 }
 
@@ -278,7 +327,7 @@ function checkWidthBody() {
     }
 }
 
-function renderCategory(arr, item) {
+function renderActiveElement(arr, item) {
     for (let i = 0; i < arr.length; i++) {
         const element = arr[i];
         element.classList.remove('active');
@@ -287,6 +336,31 @@ function renderCategory(arr, item) {
     if (item) {
         item.classList.add('active');
     }
+}
+
+function checkPaginationBtn(index) {
+    if (index === 0) {
+        paginationBtnLeft.classList.add('disabled');
+    } else {
+        paginationBtnLeft.classList.remove('disabled');
+    }
+
+    if (index === paginationLinks.length - 1) {
+        paginationBtnRight.classList.add('disabled');
+    } else {
+        paginationBtnRight.classList.remove('disabled');
+    }
+}
+
+function checkNumberPages(item) {
+    const startNumberGoodsList = document.querySelector('.number-current__start');
+    const endNumberGoodsList = document.querySelector('.number-current__end');
+    const allGoods = document.querySelector('.pagination__number-all');
+
+    let numberPage = +item.textContent;
+    startNumberGoodsList.textContent = (numberPage - 1) * 12 + 1;
+    endNumberGoodsList.textContent = numberPage * 12;
+    allGoods.textContent = 900;
 }
 
 function showOverlay() {
