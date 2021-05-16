@@ -133,6 +133,7 @@ const widthScrollBar = window.innerWidth - body.offsetWidth + 'px';
 const menuMobileAside = document.querySelector('.mobile-aside');
 const asideMenu = document.querySelector('.main-content__aside');
 const btnMessage = document.querySelectorAll('.main-content__slider-btn');
+const btnOrder = document.querySelector('.details-footer__btn');
 const modalWindow = document.querySelector('.modal');
 const alertWindow = document.querySelector('.alert-window');
 const productList = document.querySelector('.product-list');
@@ -215,6 +216,14 @@ if (btnMessage) {
             showFormWindow();
             checkWidthBody();
         });
+    });
+}
+
+if (btnOrder) {
+    btnOrder.addEventListener('click', () => {
+        showOverlay();
+        showFormWindow();
+        checkWidthBody();
     });
 }
 
