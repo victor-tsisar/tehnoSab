@@ -130,6 +130,7 @@ const swiper = new Swiper('.main-content__slider', {
 
 const body = document.querySelector('body');
 const widthScrollBar = window.innerWidth - body.offsetWidth + 'px';
+const menuLinks = document.querySelectorAll('.menu__link');
 const menuMobileAside = document.querySelector('.mobile-aside');
 const asideMenu = document.querySelector('.main-content__aside');
 const btnMessage = document.querySelectorAll('.main-content__slider-btn');
@@ -155,6 +156,21 @@ const certificateBlocks = document.querySelectorAll('.certificate__block img');
 const overlay = document.createElement('div');
 overlay.classList.add('overlay');
 document.body.insertAdjacentElement('beforeend', overlay);
+
+if (menuLinks) {
+    menuLinks.forEach(link => {
+        let location = window.location.href;
+        let page = link.href;
+        
+        if (location == page) {
+            link.style.textDecoration = 'none';
+            link.style.color = '#F7941E';
+            link.style.textShadow = '1px 1px 2px';
+
+            link.addEventListener('click', event => event.preventDefault());
+        }
+    });
+}
 
 if (productList) {
     productListItems.forEach(item => {
