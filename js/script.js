@@ -134,8 +134,14 @@ const menuMobileAside = document.querySelector('.mobile-aside');
 const asideMenu = document.querySelector('.main-content__aside');
 const btnMessage = document.querySelectorAll('.main-content__slider-btn');
 const btnOrder = document.querySelector('.details-footer__btn');
+const form = document.querySelector('#form');
+const formBtn = document.querySelector('.form__btn');
+const userName = document.querySelector('#name');
+const userPhone = document.querySelector('#phone');
+const userMessage = document.querySelector('#message');
 const modalWindow = document.querySelector('.modal');
 const alertWindow = document.querySelector('.alert-window');
+const alertWindowBtn = document.querySelector('.alert-window__btn');
 const productList = document.querySelector('.product-list');
 const productListItems = document.querySelectorAll('.product-list__link');
 const productSubLists = document.querySelectorAll('.product-sublist');
@@ -222,8 +228,42 @@ if (btnMessage) {
 if (btnOrder) {
     btnOrder.addEventListener('click', () => {
         showOverlay();
-        showFormWindow();
         checkWidthBody();
+        showFormWindow();
+        getFormData();
+    });
+}
+
+if (formBtn) {
+    form.addEventListener('submit', event => {
+        event.preventDefault();
+        validFormData();
+        
+        if (userName.value && validPhone(userPhone.value)) {
+            form.reset();
+
+            setTimeout(activeAlertWindow, 700);
+        } 
+    });
+
+    userMessage.addEventListener('input', event => {
+        let target = event.target;
+
+        target.style.height = '106px';
+        target.style.height = target.scrollHeight + 'px';
+    });
+}
+
+if (alertWindow) {
+    alertWindowBtn.addEventListener('click', () => {
+        closeAlertWindow();
+    });
+
+    overlay.addEventListener('click', () => {
+        closeAlertWindow();
+        if (menuMobileAside) {
+            menuMobileAside.classList.remove('active');
+        }
     });
 }
 
@@ -316,7 +356,7 @@ function toggleAsideMenu() {
 
 function checkMenuMobileAside() {
     const header = document.querySelectorAll('header')[0];
-    const menu = document.querySelectorAll('nav')[0];
+    const menu = document.querySelector('.menu-wrapper');
     const topMenuMobile = header.offsetHeight + menu.offsetHeight + 'px';
 
     menuMobileAside.style.top = topMenuMobile;
@@ -372,6 +412,40 @@ function checkNumberPages(item) {
     allGoods.textContent = 900;
 }
 
+function getFormData() {
+    const productTitle = form.querySelector('.form__title');
+    const productCode = form.querySelector('#product-code');
+    const productName = form.querySelector('#product-name');
+
+    productTitle.style.fontSize = '16px';
+    productTitle.textContent = 'Вы хотите заказать: ' + document.querySelector('.product-page__details-title').textContent.toLowerCase() + '. Оставьте свои даные!';
+    productName.value = document.querySelector('.product-page__details-title').textContent;
+    productCode.value = document.querySelector('.details-table__elem-value').textContent;
+}
+
+function validFormData() {
+    const nameErr = form.querySelector('#name-error');
+    const phoneErr = form.querySelector('#phone-error');
+
+    if (userName.value && validPhone(userPhone.value)) {
+        nameErr.textContent = '';
+        phoneErr.textContent = '';
+        modalWindow ? closeFormWindow() : ((overlay.style.zIndex = '1006') && (alertWindow.style.zIndex = '1007'));
+    } else {
+        if (!userName.value) {
+            nameErr.textContent = 'Введите имя';
+        } else {
+            nameErr.textContent = '';
+        }
+
+        if (!validPhone(userPhone.value)) {
+            phoneErr.textContent = 'Введите верно номер телефона';
+        } else {
+            phoneErr.textContent = '';
+        }
+    }
+}
+
 function showOverlay() {
     body.classList.add('no-scroll');
     overlay.classList.add('active');
@@ -388,4 +462,23 @@ function showFormWindow() {
 
 function closeFormWindow() {
     modalWindow.classList.remove('show');
+}
+
+function validPhone(str) {
+    const regName = /^\d{10}$/;
+    return regName.test(str);
+}
+
+function activeAlertWindow() {
+    showOverlay();
+    checkWidthBody();
+    alertWindow.classList.add('active');
+}
+
+function closeAlertWindow() {
+    closeOverlay();
+    checkWidthBody();
+    alertWindow.classList.remove('active');
+    alertWindow.removeAttribute('style');
+    overlay.removeAttribute('style');
 }

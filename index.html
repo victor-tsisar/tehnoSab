@@ -36,10 +36,8 @@
                     <a class="icons-phone" href="tel:+74712378689"></a>
                     <a class="header__phone-link" href="tel:+74712378689">+7 (4712) 37-86-89</a>
                 </div>
-
             </div>
         </header>
-
         <div class="menu-wrapper">
             <nav class="menu">
                 <ul class="menu__list">
@@ -60,7 +58,6 @@
                 <div class="menu-mobile"></div>
             </nav>
         </div>
-
         <main class="page">
             <section class="main-content content container">
                 <div class="mobile-aside"><span></span></div>
@@ -226,7 +223,6 @@
                 </div>
             </section>
         </main>
-
         <footer class="footer">
             <div class="footer__inner container">
                 <div class="footer__item footer__logo">
@@ -279,16 +275,22 @@
         <p class="alert-window__text">Демо-версия окна ответа...</p>
         <p class="alert-window__text">Ваш запрос принят! В ближайшее время с Вами свяжется наш менеджер. Спасибо, что
             выбрали нашу фирму.</p>
-        <button class="alert-window__btn btn">Отлично. Жду!</button>
+        <button class="alert-window__btn">Отлично. Жду!</button>
     </div>
 
     <div class="modal">
         <div class="form-window">
-            <form action="#" class="form">
+            <form class="form" id="form" action="#">
+                <input id="product-name" name="product-name" type="hidden">
+                <input id="product-code" name="product-code" type="hidden">
                 <p class="form__title">Отправить запрос</p>
-                <input class="form__input" name="name" type="text" placeholder="Ваше им'я">
-                <input class="form__input" name="phone" type="tel" placeholder="Ваш телефон">
-                <textarea class="form__textarea" name="message" placeholder="Ваше сообщение" rows="5"></textarea>
+                <input class="form__input" id="name" name="name" type="text" placeholder="Ваше им'я">
+                <p id="name-error"></p>
+                <input class="form__input" id="phone" name="phone" type="tel"
+                    placeholder="Ваш телефон в формате 10 цыфр">
+                <p id="phone-error"></p>
+                <textarea class="form__textarea" id="message" name="message" placeholder="Ваше сообщение"
+                    rows="5"></textarea>
                 <button class="form__btn" type="submit">Отправить запрос</button>
             </form>
         </div>
