@@ -143,6 +143,9 @@ const userMessage = document.querySelector('#message');
 const modalWindow = document.querySelector('.modal');
 const alertWindow = document.querySelector('.alert-window');
 const alertWindowBtn = document.querySelector('.alert-window__btn');
+const crumbs = document.querySelector('.crumbs');
+const crumbsList = document.querySelector('.crumbs__list');
+const pageHeaderTitle = document.querySelector('.page-header__title');
 const productList = document.querySelector('.product-list');
 const productListItems = document.querySelectorAll('.product-list__link');
 const productSubLists = document.querySelectorAll('.product-sublist');
@@ -254,12 +257,12 @@ if (formBtn) {
     form.addEventListener('submit', event => {
         event.preventDefault();
         validFormData();
-        
+
         if (userName.value && validPhone(userPhone.value)) {
             form.reset();
 
             setTimeout(activeAlertWindow, 700);
-        } 
+        }
     });
 
     userMessage.addEventListener('input', event => {
@@ -292,6 +295,70 @@ if (modalWindow) {
             closeFormWindow();
             checkWidthBody();
         }
+    });
+}
+
+if (crumbs) {
+    const crumbsListLi = crumbsList.querySelectorAll('li');
+    const main = crumbsListLi[0];
+    const page = crumbsListLi[1];
+    const category = crumbsListLi[2];
+    const product = crumbsListLi[3];
+
+    if (pageHeaderTitle && productList) {
+        const urlCatalog = location;
+        page.innerHTML = renderBreadcrumbs(pageHeaderTitle, urlCatalog);
+
+        productListItems.forEach(item => {
+            if (item.classList.contains('active')) {
+                item.nextElementSibling ? category.innerHTML = renderBreadcrumbs(item, item) : category.innerHTML = renderBreadcrumbs(item);
+            }
+
+            item.addEventListener('click', () => {
+                if (item.nextElementSibling) {
+                    category.innerHTML = renderBreadcrumbs(item, item);
+                    product.innerHTML = "";
+                } else {
+                    category.innerHTML = renderBreadcrumbs(item);
+                    product.innerHTML = "";
+                }
+
+                productSubListItems.forEach(subItem => subItem.classList.remove('active'));
+            });
+        });
+
+        productSubListItems.forEach(subItem => {
+            if (subItem.classList.contains('active')) {
+                product.innerHTML = renderBreadcrumbs(subItem);
+            }
+
+            subItem.addEventListener('click', () => {
+                product.innerHTML = renderBreadcrumbs(subItem);
+            });
+        });
+    } else if (pageHeaderTitle) {
+        page.innerHTML = renderBreadcrumbs(pageHeaderTitle);
+    }
+
+    if (location.pathname.substr(1) === 'page-product.html') {
+        page.innerHTML = `<a href="page-catalog.html" class="crumbs__link">Каталог</a>`;
+    }
+
+    main.addEventListener('click', () => {
+        page.innerHTML = "";
+        category.innerHTML = "";
+        product.innerHTML = "";
+    });
+
+    page.addEventListener('click', () => {
+        category.innerHTML = "";
+        product.innerHTML = "";
+        productSubListItems.forEach(subItem => subItem.classList.remove('active'));
+        productListItems.forEach(item => item.classList.remove('active'));
+    });
+
+    category.addEventListener('click', () => {
+        product.innerHTML = "";
     });
 }
 
@@ -400,6 +467,17 @@ function renderActiveElement(arr, item) {
 
     if (item) {
         item.classList.add('active');
+    }
+}
+
+function renderBreadcrumbs(title, link) {
+    let text = title.textContent;
+
+    if (link) {
+        let url = link.href;
+        return `<a href="${url}" class="crumbs__link icons-arrow-right">${text}</a>`;
+    } else {
+        return `<span class="crumbs__item"> ${text}</span>`;
     }
 }
 
