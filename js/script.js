@@ -260,6 +260,7 @@ if (formBtn) {
 
         if (userName.value && validPhone(userPhone.value)) {
             form.reset();
+            userMessage.style.height = '106px';
 
             setTimeout(activeAlertWindow, 700);
         }
